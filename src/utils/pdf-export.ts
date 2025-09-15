@@ -1,5 +1,6 @@
 import { ConditionEndType, ConditionType } from '../enums/condition-type';
 import { PDFCheckBox, PDFDocument, PDFTextField, StandardFonts } from 'pdf-lib';
+import * as fontkit from 'fontkit';
 import { Ability } from '../models/ability';
 import { AbilityData } from '../data/ability-data';
 import { AbilityDistanceType } from '../enums/abiity-distance-type';
@@ -48,6 +49,8 @@ export class PDFExport {
 
 	static async getFont(pdfDoc: PDFDocument, useNotoFont: boolean) {
 		if (useNotoFont) {
+			// Register fontkit for custom font embedding
+			pdfDoc.registerFontkit(fontkit);
 			// Load NotoSans-Regular.ttf from assets (must be present in the repo)
 			const notoFontUrl = `${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.ttf`;
 			let fontBytes;
