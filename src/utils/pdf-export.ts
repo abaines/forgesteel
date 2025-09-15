@@ -56,10 +56,11 @@ export class PDFExport {
 					const arr = new Uint8Array(await blob.arrayBuffer());
 					// Accept any font file over 100k as valid
 					if (arr.length < 100 * 1024) {
-						const msg = `Font file too small: got ${arr.length} bytes, expected > 100k. Possible corrupt or wrong file.`;
+						const msg = `Font file too small: got ${arr.length} bytes, expected > 100k. URL: ${url}. Possible corrupt or wrong file.`;
 						console.warn(msg);
 						throw new Error(msg);
 					}
+					console.log(`[PDFExport] Using font file: ${url} (${arr.length} bytes)`);
 					return arr;
 				}
 			} catch (e) {
@@ -74,10 +75,12 @@ export class PDFExport {
 
 	static async getFont(pdfDoc: PDFDocument, useNotoFont: boolean) {
 		if (useNotoFont) {
+			console.log('Using Noto Sans font for PDF export');
 			pdfDoc.registerFontkit(fontkit);
-			// Helper to try fetching from a list of URLs
-
+			// Try NotoSans-Regular.ttf first, then DejaVuSans.ttf as fallback
 			const fontBytes = await PDFExport.fetchFont([
+				`${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.ttf`,
+				'src/assets/fonts/noto/NotoSans-Regular.ttf',
 				`${import.meta.env.BASE_URL}assets/fonts/dejavu/DejaVuSans.ttf`,
 				'src/assets/fonts/dejavu/DejaVuSans.ttf'
 			]);
