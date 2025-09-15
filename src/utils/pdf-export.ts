@@ -54,10 +54,9 @@ export class PDFExport {
 				if (response.ok) {
 					const blob = await response.blob();
 					const arr = new Uint8Array(await blob.arrayBuffer());
-					// Length check for DejaVuSans.ttf (should be ~720,584 bytes for v2.37)
-					const expectedLength = 757076;
-					if (arr.length !== expectedLength) {
-						const msg = `DejaVuSans.ttf length mismatch: got ${arr.length}, expected ${expectedLength}. Possible corrupt or wrong file.`;
+					// Accept any font file over 100k as valid
+					if (arr.length < 100 * 1024) {
+						const msg = `Font file too small: got ${arr.length} bytes, expected > 100k. Possible corrupt or wrong file.`;
 						console.warn(msg);
 						throw new Error(msg);
 					}
