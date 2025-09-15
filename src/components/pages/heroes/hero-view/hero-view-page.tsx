@@ -79,6 +79,7 @@ export const HeroViewPage = (props: Props) => {
 	const [ pdfFormFillable, setPdfFormFillable ] = useState<boolean>(false);
 	const [ pdfResolution, setPdfResolution ] = useState<'standard' | 'high'>('standard');
 	const [ exportPopoverOpen, setExportPopoverOpen ] = useState<boolean>(false);
+	const [ useNotoFont, setUseNotoFont ] = useState<boolean>(false);
 	const hero = useMemo(
 		() => props.heroes.find(h => h.id === heroID)!,
 		[ heroID, props.heroes ]
@@ -92,7 +93,7 @@ export const HeroViewPage = (props: Props) => {
 		const exportPDF = () => {
 			switch (view) {
 				case 'modern':
-					props.exportPdf(hero, { mode: pdfOrientation, formFillable: pdfFormFillable });
+					props.exportPdf(hero, { mode: pdfOrientation, formFillable: pdfFormFillable, useNotoFont });
 					break;
 				case 'classic':
 					props.exportPdf(hero, { mode: 'html', resolution: pdfResolution });
@@ -195,6 +196,12 @@ export const HeroViewPage = (props: Props) => {
 												label='Form fillable'
 												value={pdfFormFillable}
 												onChange={setPdfFormFillable}
+											/>
+											<Toggle
+												disabled={view !== 'modern'}
+												label='Use Noto Font (Unicode/Emoji)'
+												value={useNotoFont}
+												onChange={setUseNotoFont}
 											/>
 											<Segmented
 												disabled={view !== 'classic'}

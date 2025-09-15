@@ -49,7 +49,7 @@ export class PDFExport {
 	static async getFont(pdfDoc: PDFDocument, useNotoFont: boolean) {
 		if (useNotoFont) {
 			// Load NotoSans-Regular.ttf from assets (must be present in the repo)
-			const notoFontUrl = '/src/assets/fonts/noto/NotoSans-Regular.ttf';
+			const notoFontUrl = `${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.ttf`;
 			let fontBytes;
 			// Try to load via fetch (works in browser context)
 			try {

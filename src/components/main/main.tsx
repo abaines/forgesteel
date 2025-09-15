@@ -306,7 +306,7 @@ export const Main = (props: Props) => {
 					setSpinning(false);
 				});
 		} else {
-			PDFExport.startExport(hero, [ SourcebookData.core, SourcebookData.orden, ...homebrewSourcebooks ], data.mode, !formFillable);
+			PDFExport.startExport(hero, [ SourcebookData.core, SourcebookData.orden, ...homebrewSourcebooks ], data.mode, !formFillable, data.useNotoFont);
 		}
 	};
 
