@@ -913,7 +913,7 @@ You can’t take this complication if you can’t be made dazed.`,
 	static infernalContractButLikeBad: Complication = {
 		id: 'comp-infernalContractButLikeBad',
 		name: 'Infernal Contract … But, Like, Bad',
-		description: 'You made a deal with a devil. Not a very good deal, because it wasn’t a very good devil. It’s too late for regrets, thought, because your soul is forfeit unless you find a loophole or convince the devil to void the deal.',
+		description: 'You made a deal with a devil. Not a very good deal, because it wasn’t a very good devil. It’s too late for regrets, though, because your soul is forfeit unless you find a loophole or convince the devil to void the deal.',
 		features: [
 			FactoryLogic.feature.createChoice({
 				id: 'comp-infernalContractButLikeBad-b',
@@ -1790,10 +1790,8 @@ Note: Stormwight furies can’t take this complication.`,
 					distance: [ FactoryLogic.distance.createRanged(10) ],
 					target: 'One ally',
 					sections: [
-						FactoryLogic.createAbilitySectionText(`
-The target can use a triggered action to take a main action, a move action, or a maneuver.
-
-Note: If you have the Strike Now tactician ability, the target can use a free triggered action instead of a triggered action to gain the benefit of this ability.`)
+						FactoryLogic.createAbilitySectionText('**Effect** The target can use a triggered action to take a main action, a maneuver, or a move action.'),
+						FactoryLogic.createAbilitySectionText('**Special** If you have the Strike Now tactician ability, the target can use a free triggered action instead of a triggered action to gain the benefit of this ability.')
 					]
 				})
 			}),
