@@ -47,21 +47,31 @@ export class PDFExport {
 			.replace(/č/g, 'c');
 	};
 
+	static async fetchFont(urls: string[]): Promise<Uint8Array> {
+		for (const url of urls) {
+			try {
+				const response = await fetch(url);
+				if (response.ok) {
+					const blob = await response.blob();
+					return new Uint8Array(await blob.arrayBuffer());
+				}
+			} catch (e) {
+				// Try next URL
+			}
+		}
+		throw new Error('Failed to fetch Noto Sans font from all sources.');
+	}
+
 	static async getFont(pdfDoc: PDFDocument, useNotoFont: boolean) {
 		if (useNotoFont) {
-			// Register fontkit for custom font embedding
 			pdfDoc.registerFontkit(fontkit);
-			// Load NotoSans-Regular.ttf from assets (must be present in the repo)
-			const notoFontUrl = `${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.ttf`;
-			let fontBytes;
-			// Try to load via fetch (works in browser context)
-			try {
-				fontBytes = await fetch(notoFontUrl).then(res => res.arrayBuffer());
-			} catch (e) {
-				// fallback: try relative path (works in some build setups)
-				fontBytes = await fetch('src/assets/fonts/noto/NotoSans-Regular.ttf').then(res => res.arrayBuffer());
-			}
-			return await pdfDoc.embedFont(new Uint8Array(fontBytes));
+			// Helper to try fetching from a list of URLs
+
+			const fontBytes = await PDFExport.fetchFont([
+				`${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.woff2`,
+				'src/assets/fonts/noto/NotoSans-Regular.woff2'
+			]);
+			return await pdfDoc.embedFont(fontBytes);
 		} else {
 			return await pdfDoc.embedFont(StandardFonts.TimesRoman);
 		}
