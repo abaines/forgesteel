@@ -57,7 +57,9 @@ export class PDFExport {
 					// Length check for DejaVuSans.ttf (should be ~720,584 bytes for v2.37)
 					const expectedLength = 757076;
 					if (arr.length !== expectedLength) {
-						throw new Error(`DejaVuSans.ttf length mismatch: got ${arr.length}, expected ${expectedLength}. Possible corrupt or wrong file.`);
+						const msg = `DejaVuSans.ttf length mismatch: got ${arr.length}, expected ${expectedLength}. Possible corrupt or wrong file.`;
+						console.warn(msg);
+						throw new Error(msg);
 					}
 					return arr;
 				}
@@ -66,7 +68,9 @@ export class PDFExport {
 				// Try next URL
 			}
 		}
-		throw new Error('Failed to fetch DejaVu Sans font from all sources.');
+		const msg = 'Failed to fetch DejaVu Sans font from all sources.';
+		console.error(msg);
+		throw new Error(msg);
 	}
 
 	static async getFont(pdfDoc: PDFDocument, useNotoFont: boolean) {
