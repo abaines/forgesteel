@@ -57,7 +57,6 @@ export class PDFExport {
 					// Accept any font file over 100k as valid
 					if (arr.length < 100 * 1024) {
 						const msg = `Font file too small: got ${arr.length} bytes, expected > 100k. URL: ${url}. Possible corrupt or wrong file.`;
-						console.warn(msg);
 						throw new Error(msg);
 					}
 					console.log(`[PDFExport] Using font file: ${url} (${arr.length} bytes)`);
@@ -81,8 +80,6 @@ export class PDFExport {
 			const fontBytes = await PDFExport.fetchFont([
 				`${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.ttf`,
 				'src/assets/fonts/noto/NotoSans-Regular.ttf',
-				`${import.meta.env.BASE_URL}assets/fonts/dejavu/DejaVuSans.ttf`,
-				'src/assets/fonts/dejavu/DejaVuSans.ttf'
 			]);
 			return await pdfDoc.embedFont(fontBytes);
 		} else {
