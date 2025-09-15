@@ -79,7 +79,7 @@ export class PDFExport {
 			// Try NotoSans-Regular.ttf first, then DejaVuSans.ttf as fallback
 			const fontBytes = await PDFExport.fetchFont([
 				`${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.ttf`,
-				'src/assets/fonts/noto/NotoSans-Regular.ttf',
+				'src/assets/fonts/noto/NotoSans-Regular.ttf'
 			]);
 			return await pdfDoc.embedFont(fontBytes);
 		} else {
