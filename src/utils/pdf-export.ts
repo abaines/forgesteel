@@ -46,7 +46,31 @@ export class PDFExport {
 			.replace(/č/g, 'c');
 	};
 
-	static startExport = async (hero: Hero, sourcebooks: Sourcebook[], format: 'portrait' | 'landscape', flatten: boolean) => {
+	static async getFont(pdfDoc: PDFDocument, useNotoFont: boolean) {
+		if (useNotoFont) {
+			// Load NotoSans-Regular.ttf from assets (must be present in the repo)
+			const notoFontUrl = '/src/assets/fonts/noto/NotoSans-Regular.ttf';
+			let fontBytes;
+			// Try to load via fetch (works in browser context)
+			try {
+				fontBytes = await fetch(notoFontUrl).then(res => res.arrayBuffer());
+			} catch (e) {
+				// fallback: try relative path (works in some build setups)
+				fontBytes = await fetch('src/assets/fonts/noto/NotoSans-Regular.ttf').then(res => res.arrayBuffer());
+			}
+			return await pdfDoc.embedFont(new Uint8Array(fontBytes));
+		} else {
+			return await pdfDoc.embedFont(StandardFonts.TimesRoman);
+		}
+	}
+
+	static startExport = async (
+		hero: Hero,
+		sourcebooks: Sourcebook[],
+		format: 'portrait' | 'landscape',
+		flatten: boolean,
+		useNotoFont: boolean = false
+	) => {
 		let file: string;
 		switch (format) {
 			case 'portrait':
@@ -60,9 +84,9 @@ export class PDFExport {
 		const pdfAsBytes = await fetch(file).then(res => res.arrayBuffer());
 		const pdfDoc = await PDFDocument.load(pdfAsBytes);
 
-		const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+		const font = await PDFExport.getFont(pdfDoc, useNotoFont);
 		const fontSize = 9;
-
+		
 		const autoResizingFields: string[] = [];
 
 		const heroicResources = HeroLogic.getHeroicResources(hero);
