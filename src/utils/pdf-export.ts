@@ -53,6 +53,7 @@ export class PDFExport {
 				const response = await fetch(url);
 				if (response.ok) {
 					const blob = await response.blob();
+					console.log("✅",url);
 					return new Uint8Array(await blob.arrayBuffer());
 				}
 			} catch (e) {
@@ -66,10 +67,30 @@ export class PDFExport {
 		if (useNotoFont) {
 			pdfDoc.registerFontkit(fontkit);
 			// Helper to try fetching from a list of URLs
-
-			const fontBytes = await PDFExport.fetchFont([
-				`${import.meta.env.BASE_URL}assets/fonts/noto/NotoSans-Regular.woff2`,
-				'src/assets/fonts/noto/NotoSans-Regular.woff2'
+			async function fetchFont(urls: string[]): Promise<Uint8Array> {
+				for (const url of urls) {
+					try {
+						const response = await fetch(url);
+						if (response.ok) {
+							const blob = await response.blob();
+							const arr = new Uint8Array(await blob.arrayBuffer());
+							// Length check for DejaVuSans.ttf (should be ~720,584 bytes for v2.37)
+							const expectedLength = 757076;
+							if (arr.length !== expectedLength) {
+								throw new Error(`DejaVuSans.ttf length mismatch: got ${arr.length}, expected ${expectedLength}. Possible corrupt or wrong file.`);
+							}
+							return arr;
+						}
+					} catch (e) {
+						console.warn(e);
+						// Try next URL
+					}
+				}
+				throw new Error('Failed to fetch DejaVu Sans font from all sources.');
+			}
+			const fontBytes = await fetchFont([
+				`${import.meta.env.BASE_URL}assets/fonts/dejavu/DejaVuSans.ttf`,
+				'src/assets/fonts/dejavu/DejaVuSans.ttf'
 			]);
 			return await pdfDoc.embedFont(fontBytes);
 		} else {
