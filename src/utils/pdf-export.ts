@@ -1,6 +1,6 @@
 import { ConditionEndType, ConditionType } from '../enums/condition-type';
 import { PDFCheckBox, PDFDocument, PDFTextField, StandardFonts } from 'pdf-lib';
-import * as fontkit from 'fontkit';
+import fontkit from '@pdf-lib/fontkit';
 import { Ability } from '../models/ability';
 import { AbilityData } from '../data/ability-data';
 import { AbilityDistanceType } from '../enums/abiity-distance-type';
@@ -106,7 +106,7 @@ export class PDFExport {
 
 		const font = await PDFExport.getFont(pdfDoc, useNotoFont);
 		const fontSize = 9;
-		
+
 		const autoResizingFields: string[] = [];
 
 		const heroicResources = HeroLogic.getHeroicResources(hero);
